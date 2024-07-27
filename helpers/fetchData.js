@@ -1,24 +1,20 @@
 import { db } from "../database/config.js"
 
+
 export const fetchCategory = async(categoryId) => {
-    console.log('inside helper:', categoryId)
+
     const params = {
-       
-        Key:{
-            "categoryId":categoryId,
-            
-        },
-        TableName:'category'
-    
-    }
+        TableName: 'category', 
+        Key: {
+            categoryId: Number(categoryId) 
+        }
+    };
+
     try {
 
-        const cats = await db.get(params).promise()
-        console.log('datas',cats)
-        return cats
+        const categoryData = await db.get(params).promise()
+        return categoryData
 
-
-        
     } catch (error) {
         console.log(error)
     }
@@ -26,15 +22,17 @@ export const fetchCategory = async(categoryId) => {
 
 
 export const fetchProducts = async(categoryId) => {
+    
     const params = {
-        Key:{
-            categoryId:categoryId
-        },
-        TableName:'product'
+        TableName:'product',
+        FilterExpression: 'categoryId = :categoryId',
+        ExpressionAttributeValues: {
+            ':categoryId': categoryId
+        }
 
     }
     try {
-       return await db.query(params).promise()
+       return await db.scan(params).promise()
         
     } catch (error) {
 

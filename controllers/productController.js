@@ -1,5 +1,5 @@
 import { db } from "../database/config.js"
-import { fetchCategory } from "../helpers/fetchData.js"
+import { fetchCategory, fetchProducts } from "../helpers/fetchData.js"
 import { customAlphabet } from 'nanoid';
 
 export const productControllers = () =>{
@@ -31,8 +31,12 @@ export const productControllers = () =>{
         try {
             const categoryId = req.query.categoryId
 
-            const data = await fetchCategory(categoryId)
-            return res.status(200).json({message:'sucecss',data})
+            const categoryData = await fetchCategory(categoryId)
+            const productData = await fetchProducts(categoryId)
+
+            
+            return res.status(200).json({...categoryData.Item, products:productData.Items})
+            
         } catch (error) {
             console.log(error)
             next(error)
