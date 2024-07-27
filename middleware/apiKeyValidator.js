@@ -1,3 +1,5 @@
+
+//middleware to validate api request
 export const apiValidator = async(req, res, next) => {
     try {
 
